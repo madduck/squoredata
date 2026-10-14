@@ -2,11 +2,15 @@
   "name": "squoredata-tools",
   "private": true,
   "description": "Build tooling for the squoredata TypeScript bindings",
+  "type": "module",
   "scripts": {
     "generate": "python scripts/generate_ts.py",
-    "test": "tsc --noEmit -p tsconfig.json"
+    "test:types": "tsc --noEmit -p tsconfig.json",
+    "test:runtime": "node --test typescript/tests/golden.test.js",
+    "test": "npm run test:types && npm run test:runtime"
   },
   "devDependencies": {
+    "ajv": "^8.17.1",
     "json-schema-to-typescript": "^15.0.4",
     "typescript": "^5.7.0"
   }

@@ -1,11 +1,46 @@
 {
-  "name": "squoredata-types",
+  "name": "@madduck/squoredata",
   "version": "0.1.0",
-  "description": "TypeScript bindings for the squoredata Pydantic models",
-  "types": "index.d.ts",
+  "description": "TypeScript bindings and JSON Schema validators for the squoredata Pydantic models",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madduck/squoredata.git"
+  },
+  "homepage": "https://github.com/madduck/squoredata#readme",
+  "bugs": {
+    "url": "https://github.com/madduck/squoredata/issues"
+  },
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./schemas/SquoreMatch.schema.json": "./schemas/SquoreMatch.schema.json",
+    "./schemas/SquoreMatchLiveData.schema.json": "./schemas/SquoreMatchLiveData.schema.json",
+    "./package.json": "./package.json"
+  },
   "files": [
+    "index.js",
+    "index.d.ts",
     "*.d.ts",
-    "*.schema.json"
+    "schemas",
+    "README.md",
+    "LICENSE"
   ],
-  "license": "MIT"
+  "dependencies": {
+    "ajv": "^8.17.1"
+  },
+  "keywords": [
+    "squore",
+    "squoredata",
+    "pydantic",
+    "json-schema",
+    "typescript",
+    "types"
+  ],
+  "sideEffects": false
 }

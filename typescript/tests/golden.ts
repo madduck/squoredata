@@ -1,10 +1,12 @@
 // Golden test: the shared files in golden/ must satisfy the generated
-// interfaces.  This is a compile-time test; run it with
+// interfaces, and the runtime validators must accept them and reject
+// deliberate mismatches.
 //
-//   npx tsc --noEmit -p tsconfig.json
+//   node --test typescript/tests/golden.test.js   (runtime)
+//   npx tsc --noEmit -p tsconfig.json             (types)
 //
 // A mismatch between the Pydantic models and the generated TypeScript makes
-// this file fail to compile.
+// this file fail to compile or fail to run.
 import squoreMatch from "../../golden/squore-match.json";
 import squoreMatchLiveData from "../../golden/squore-match-livedata.json";
 import type { SquoreMatch } from "../SquoreMatch";

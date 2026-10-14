@@ -1,0 +1,408 @@
+{
+  "$defs": {
+    "Clubs": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "A"
+        },
+        "B": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B"
+        }
+      },
+      "title": "Clubs",
+      "type": "object"
+    },
+    "Colors": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "A"
+        },
+        "B": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B"
+        }
+      },
+      "title": "Colors",
+      "type": "object"
+    },
+    "Countries": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "A"
+        },
+        "B": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B"
+        }
+      },
+      "title": "Countries",
+      "type": "object"
+    },
+    "Event": {
+      "additionalProperties": false,
+      "description": "The event a match belongs to.",
+      "properties": {
+        "division": {
+          "title": "Division",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "division"
+      ],
+      "title": "Event",
+      "type": "object"
+    },
+    "Format": {
+      "additionalProperties": false,
+      "description": "The scoring format of a match.",
+      "properties": {
+        "numberOfGamesToWinMatch": {
+          "default": 3,
+          "title": "Numberofgamestowinmatch",
+          "type": "integer"
+        },
+        "numberOfPointsToWinGame": {
+          "default": 11,
+          "title": "Numberofpointstowingame",
+          "type": "integer"
+        },
+        "useHandInHandOutScoring": {
+          "default": false,
+          "title": "Usehandinhandoutscoring",
+          "type": "boolean"
+        }
+      },
+      "title": "Format",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "description": "Metadata a Squore tablet attaches to a match.",
+      "properties": {
+        "device": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SquoreDeviceInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "shareURL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shareurl"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "sourceFeedbackState": {
+          "anyOf": [
+            {
+              "const": "SourceAcceptedFinalResult",
+              "type": "string"
+            },
+            {
+              "const": "SourceRejectedResult",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcefeedbackstate"
+        },
+        "sourceID": {
+          "title": "Sourceid",
+          "type": "string"
+        },
+        "sourcePostResultUrl": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcepostresulturl"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "wifi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Wifi"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "sourceID"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "Players": {
+      "additionalProperties": false,
+      "description": "The names of the two players.",
+      "properties": {
+        "A": {
+          "title": "A",
+          "type": "string"
+        },
+        "B": {
+          "title": "B",
+          "type": "string"
+        }
+      },
+      "required": [
+        "A",
+        "B"
+      ],
+      "title": "Players",
+      "type": "object"
+    },
+    "SquoreDeviceInfo": {
+      "description": "Device information as reported by a Squore tablet.",
+      "properties": {
+        "batteryCharging": {
+          "title": "Batterycharging",
+          "type": "boolean"
+        },
+        "batteryPercentage": {
+          "title": "Batterypercentage",
+          "type": "integer"
+        },
+        "deviceid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deviceid"
+        },
+        "timestamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timestamp"
+        }
+      },
+      "required": [
+        "batteryCharging",
+        "batteryPercentage"
+      ],
+      "title": "SquoreDeviceInfo",
+      "type": "object"
+    },
+    "Wifi": {
+      "additionalProperties": false,
+      "description": "The WiFi details a device is connected to.",
+      "properties": {
+        "ipaddress": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ipaddress"
+        },
+        "ssid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ssid"
+        }
+      },
+      "title": "Wifi",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A match as used by Squore, without any live information.",
+  "properties": {
+    "clubs": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Clubs"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "colors": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Colors"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "countries": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Countries"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "event": {
+      "$ref": "#/$defs/Event"
+    },
+    "format": {
+      "$ref": "#/$defs/Format"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "players": {
+      "$ref": "#/$defs/Players"
+    }
+  },
+  "required": [
+    "players",
+    "event",
+    "format",
+    "metadata"
+  ],
+  "title": "SquoreMatch",
+  "type": "object"
+}

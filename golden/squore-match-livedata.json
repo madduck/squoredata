@@ -1,0 +1,573 @@
+{
+  "appName": "Squore",
+  "appPackage": "com.doubleyellow.scoreboard",
+  "clubs": null,
+  "colors": null,
+  "countries": null,
+  "court": 1,
+  "customData": null,
+  "event": {
+    "division": "Court 1",
+    "name": "Golden Tournament"
+  },
+  "format": {
+    "numberOfGamesToWinMatch": 3,
+    "numberOfPointsToWinGame": 11,
+    "useHandInHandOutScoring": false
+  },
+  "games": [
+    {
+      "endtime": "2024-01-02T03:00:37.000006",
+      "score": [
+        11,
+        9
+      ],
+      "scoreline": [
+        {
+          "data": 1,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 1,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 2,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 2,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 3,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 3,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 4,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 4,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 5,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 5,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 6,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 6,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 7,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 7,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 8,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 8,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 9,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 9,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 10,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 11,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        }
+      ],
+      "starttime": "2024-01-02T03:00:17.000006",
+      "winner": 0
+    },
+    {
+      "endtime": "2024-01-02T03:02:25.000006",
+      "score": [
+        11,
+        7
+      ],
+      "scoreline": [
+        {
+          "data": 1,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 1,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 2,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 2,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 3,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 3,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 4,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 4,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 5,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 5,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 6,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 6,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 7,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 7,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 8,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 9,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 10,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 11,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        }
+      ],
+      "starttime": "2024-01-02T03:02:07.000006",
+      "winner": 0
+    },
+    {
+      "endtime": "2024-01-02T03:04:05.000006",
+      "score": [
+        4,
+        6
+      ],
+      "scoreline": [
+        {
+          "data": 1,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 1,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 2,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 2,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 3,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 3,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 4,
+          "duration": 1,
+          "player": 0,
+          "server": 0,
+          "serveside": "L"
+        },
+        {
+          "data": 4,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 5,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        },
+        {
+          "data": 6,
+          "duration": 1,
+          "player": 1,
+          "server": 0,
+          "serveside": "R"
+        }
+      ],
+      "starttime": "2024-01-02T03:03:55.000006",
+      "winner": 1
+    }
+  ],
+  "gamescores": "11-9,11-7,4-6",
+  "isGameBall": true,
+  "isHandOut": true,
+  "isMatchBall": false,
+  "isUndo": false,
+  "isVictoryFor": null,
+  "lastCall": null,
+  "lastScorer": null,
+  "liveScoreDeviceId": "squore-golden",
+  "lockState": "Unlocked",
+  "maxNrOfPowerPlays": null,
+  "metadata": {
+    "device": {
+      "batteryCharging": true,
+      "batteryPercentage": 42,
+      "deviceid": "squore-golden",
+      "timestamp": "2024-01-02T03:04:05.000006"
+    },
+    "language": null,
+    "shareURL": null,
+    "source": null,
+    "sourceFeedbackState": null,
+    "sourceID": "golden-match",
+    "sourcePostResultUrl": null,
+    "version": null,
+    "wifi": null
+  },
+  "players": {
+    "A": "Jane Doe",
+    "B": "Mary Major"
+  },
+  "result": "2-1",
+  "score": [
+    [
+      "L1--",
+      "R--1",
+      "L2--",
+      "R--2",
+      "L3--",
+      "R--3",
+      "L4--",
+      "R--4",
+      "L5--",
+      "R--5",
+      "L6--",
+      "R--6",
+      "L7--",
+      "R--7",
+      "L8--",
+      "R--8",
+      "L9--",
+      "R--9",
+      "L10--",
+      "L11--"
+    ],
+    [
+      "L1--",
+      "R--1",
+      "L2--",
+      "R--2",
+      "L3--",
+      "R--3",
+      "L4--",
+      "R--4",
+      "L5--",
+      "R--5",
+      "L6--",
+      "R--6",
+      "L7--",
+      "R--7",
+      "L8--",
+      "L9--",
+      "L10--",
+      "L11--"
+    ],
+    [
+      "L1--",
+      "R--1",
+      "L2--",
+      "R--2",
+      "L3--",
+      "R--3",
+      "L4--",
+      "R--4",
+      "R--5",
+      "R--6"
+    ]
+  ],
+  "scores": [
+    [
+      11,
+      9
+    ],
+    [
+      11,
+      7
+    ],
+    [
+      4,
+      6
+    ]
+  ],
+  "serveSide": "R",
+  "server": "A",
+  "start": "2024-01-02T03:04:05.000006",
+  "status": 3,
+  "timerInfo": {
+    "totalSeconds": 15,
+    "type": "UntilStartOfNextGame"
+  },
+  "timestamp": "2024-01-02T03:04:05.000006",
+  "timing": [
+    {
+      "end": "2024-01-02T03:00:37.000006",
+      "offsets": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "start": "2024-01-02T03:00:17.000006"
+    },
+    {
+      "end": "2024-01-02T03:02:25.000006",
+      "offsets": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "start": "2024-01-02T03:02:07.000006"
+    },
+    {
+      "end": "2024-01-02T03:04:05.000006",
+      "offsets": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "start": "2024-01-02T03:03:55.000006"
+    }
+  ],
+  "when": {
+    "date": "2024-01-02",
+    "time": "03:04:05.000006"
+  },
+  "winner": null
+}

@@ -1,0 +1,111 @@
+[build-system]
+requires = ["hatchling", "pydantic"]
+build-backend = "hatchling.build"
+
+[project]
+name = "squoredata"
+version = "0.1.0"
+authors = [
+  { name = "martin f. krafft", email = "squoredata@pobox.madduck.net" },
+]
+description = "Self-contained Pydantic data structures used by Squore tablets"
+readme = "README.md"
+requires-python = ">=3.13"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+dependencies = ["pydantic"]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-mock",
+  "pytest-asyncio",
+  "pytest-ruff",
+  "pytest-cov",
+  "coverage",
+  "mypy",
+  "ruff",
+]
+
+[dependency-groups]
+dev = [
+  "bandit>=1.9.4",
+  "coverage>=7.16.2",
+  "mypy>=2.4.0",
+  "pytest>=9.1.1",
+  "pytest-cov>=7.1.0",
+  "pytest-ruff>=0.5",
+  "ruff>=0.17.0",
+]
+[tool.hatch.build.targets.wheel]
+packages = ["src/squoredata"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/squoredata",
+  "scripts",
+  "typescript",
+  "golden",
+  "golden_data.py",
+  "hatch_build.py",
+  "README.md",
+  "pyproject.toml",
+]
+
+# --- TypeScript generation -------------------------------------------------
+#
+# The TypeScript interfaces under typescript/ are generated from the Pydantic
+# models at build time via `scripts/generate_ts.py`.  The hook runs before the
+# wheel is built so a released wheel can never diverge from the committed
+# sources; the committed output is what `npm` installs.
+[tool.hatch.build.hooks.custom]
+path = "hatch_build.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = """
+  -ra
+  --cov=squoredata --cov-report term-missing:skip-covered --no-cov-on-fail
+  --ruff --ruff-format --ruff-config 'lint.ignore = ["I001", "F401", "F841"]'
+"""
+asyncio_default_fixture_loop_scope = "function"
+log_level = "WARNING"
+log_format = "%(name)s %(levelname)s %(message)s"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["B", "C", "E", "F", "I", "W", "B9"]
+
+[tool.mypy]
+strict = true
+warn_unreachable = true
+mypy_path = "src:."
+exclude = ["^typescript/"]
+
+[[tool.mypy.overrides]]
+module = "hatchling.*"
+ignore_missing_imports = true
+
+[tool.coverage.report]
+exclude_also = [
+  'def __repr__',
+  'if TYPE_CHECKING:',
+  'class .*\bProtocol\):',
+  '@overload',
+  '@(abc\.)?abstractmethod',
+  'raise NotImplementedError',
+  'raise AssertionError',
+]
+
+[tool.bandit]
+exclude_dirs = ['.direnv', '.venv']
+
+[tool.bandit.assert_used]
+skips = ['*/tests/test_*.py']

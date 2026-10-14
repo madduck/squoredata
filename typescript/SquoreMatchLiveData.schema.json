@@ -1,0 +1,968 @@
+{
+  "$defs": {
+    "AppealType": {
+      "anyOf": [
+        {
+          "const": "S",
+          "type": "string"
+        },
+        {
+          "const": "L",
+          "type": "string"
+        },
+        {
+          "const": "N",
+          "type": "string"
+        }
+      ]
+    },
+    "Clubs": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "A"
+        },
+        "B": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B"
+        }
+      },
+      "title": "Clubs",
+      "type": "object"
+    },
+    "Colors": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "A"
+        },
+        "B": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B"
+        }
+      },
+      "title": "Colors",
+      "type": "object"
+    },
+    "Countries": {
+      "additionalProperties": false,
+      "properties": {
+        "A": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "A"
+        },
+        "B": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "B"
+        }
+      },
+      "title": "Countries",
+      "type": "object"
+    },
+    "Event": {
+      "additionalProperties": false,
+      "description": "The event a match belongs to.",
+      "properties": {
+        "division": {
+          "title": "Division",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "division"
+      ],
+      "title": "Event",
+      "type": "object"
+    },
+    "Format": {
+      "additionalProperties": false,
+      "description": "The scoring format of a match.",
+      "properties": {
+        "numberOfGamesToWinMatch": {
+          "default": 3,
+          "title": "Numberofgamestowinmatch",
+          "type": "integer"
+        },
+        "numberOfPointsToWinGame": {
+          "default": 11,
+          "title": "Numberofpointstowingame",
+          "type": "integer"
+        },
+        "useHandInHandOutScoring": {
+          "default": false,
+          "title": "Usehandinhandoutscoring",
+          "type": "boolean"
+        }
+      },
+      "title": "Format",
+      "type": "object"
+    },
+    "Game": {
+      "description": "A single game within a match.",
+      "properties": {
+        "endtime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endtime"
+        },
+        "score": {
+          "$ref": "#/$defs/Result"
+        },
+        "scoreline": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Point"
+          },
+          "title": "Scoreline",
+          "type": "array"
+        },
+        "starttime": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Starttime"
+        },
+        "winner": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Winner"
+        }
+      },
+      "required": [
+        "score"
+      ],
+      "title": "Game",
+      "type": "object"
+    },
+    "LiveStatus": {
+      "description": "The status of a live match, derived from the Squore live data.",
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "title": "LiveStatus",
+      "type": "integer"
+    },
+    "LockStateType": {
+      "anyOf": [
+        {
+          "const": "Unlocked",
+          "type": "string"
+        },
+        {
+          "const": "UnlockedManual",
+          "type": "string"
+        },
+        {
+          "const": "UnlockedEndOfFinalGame",
+          "type": "string"
+        },
+        {
+          "const": "LockedManual",
+          "type": "string"
+        },
+        {
+          "const": "LockedManualGUI",
+          "type": "string"
+        },
+        {
+          "const": "LockedEndOfMatch",
+          "type": "string"
+        },
+        {
+          "const": "LockedIdleTime",
+          "type": "string"
+        },
+        {
+          "const": "SharedEndedMatch",
+          "type": "string"
+        },
+        {
+          "const": "LockedEndOfMatchRetired",
+          "type": "string"
+        },
+        {
+          "const": "LockedEndOfMatchConduct",
+          "type": "string"
+        },
+        {
+          "const": "LockedEndOfMatchTimeBased",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "description": "Metadata a Squore tablet attaches to a match.",
+      "properties": {
+        "device": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SquoreDeviceInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "shareURL": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shareurl"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "sourceFeedbackState": {
+          "anyOf": [
+            {
+              "const": "SourceAcceptedFinalResult",
+              "type": "string"
+            },
+            {
+              "const": "SourceRejectedResult",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcefeedbackstate"
+        },
+        "sourceID": {
+          "title": "Sourceid",
+          "type": "string"
+        },
+        "sourcePostResultUrl": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sourcepostresulturl"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        },
+        "wifi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Wifi"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "sourceID"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "PlayerIndex": {
+      "anyOf": [
+        {
+          "const": 0,
+          "type": "integer"
+        },
+        {
+          "const": 1,
+          "type": "integer"
+        }
+      ]
+    },
+    "PlayerLetter": {
+      "anyOf": [
+        {
+          "const": "A",
+          "type": "string"
+        },
+        {
+          "const": "B",
+          "type": "string"
+        }
+      ]
+    },
+    "Players": {
+      "additionalProperties": false,
+      "description": "The names of the two players.",
+      "properties": {
+        "A": {
+          "title": "A",
+          "type": "string"
+        },
+        "B": {
+          "title": "B",
+          "type": "string"
+        }
+      },
+      "required": [
+        "A",
+        "B"
+      ],
+      "title": "Players",
+      "type": "object"
+    },
+    "Point": {
+      "description": "A single point in a game.",
+      "properties": {
+        "data": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "$ref": "#/$defs/AppealType"
+            }
+          ],
+          "title": "Data"
+        },
+        "duration": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Duration"
+        },
+        "player": {
+          "$ref": "#/$defs/PlayerIndex"
+        },
+        "server": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PlayerIndex"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "serveside": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ServerSide"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "server",
+        "serveside",
+        "player",
+        "data"
+      ],
+      "title": "Point",
+      "type": "object"
+    },
+    "Result": {
+      "items": {
+        "type": "integer"
+      },
+      "type": "array"
+    },
+    "ServerSide": {
+      "anyOf": [
+        {
+          "const": "L",
+          "type": "string"
+        },
+        {
+          "const": "R",
+          "type": "string"
+        }
+      ]
+    },
+    "ServerType": {
+      "$ref": "#/$defs/PlayerLetter"
+    },
+    "SquoreDeviceInfo": {
+      "description": "Device information as reported by a Squore tablet.",
+      "properties": {
+        "batteryCharging": {
+          "title": "Batterycharging",
+          "type": "boolean"
+        },
+        "batteryPercentage": {
+          "title": "Batterypercentage",
+          "type": "integer"
+        },
+        "deviceid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Deviceid"
+        },
+        "timestamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timestamp"
+        }
+      },
+      "required": [
+        "batteryCharging",
+        "batteryPercentage"
+      ],
+      "title": "SquoreDeviceInfo",
+      "type": "object"
+    },
+    "TimerInfo": {
+      "additionalProperties": false,
+      "description": "Information about a running countdown timer.",
+      "properties": {
+        "totalSeconds": {
+          "title": "Totalseconds",
+          "type": "integer"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "const": "Warmup",
+              "type": "string"
+            },
+            {
+              "const": "UntilStartOfFirstGame",
+              "type": "string"
+            },
+            {
+              "const": "UntilStartOfNextGame",
+              "type": "string"
+            }
+          ],
+          "title": "Type"
+        }
+      },
+      "required": [
+        "type",
+        "totalSeconds"
+      ],
+      "title": "TimerInfo",
+      "type": "object"
+    },
+    "Timing": {
+      "additionalProperties": false,
+      "description": "Timing information for one game.",
+      "properties": {
+        "end": {
+          "title": "End",
+          "type": "string"
+        },
+        "offsets": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Offsets"
+        },
+        "start": {
+          "title": "Start",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "Timing",
+      "type": "object"
+    },
+    "When": {
+      "additionalProperties": false,
+      "description": "The date and time a match is scheduled for.",
+      "properties": {
+        "date": {
+          "title": "Date",
+          "type": "string"
+        },
+        "time": {
+          "title": "Time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "date",
+        "time"
+      ],
+      "title": "When",
+      "type": "object"
+    },
+    "Wifi": {
+      "additionalProperties": false,
+      "description": "The WiFi details a device is connected to.",
+      "properties": {
+        "ipaddress": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ipaddress"
+        },
+        "ssid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ssid"
+        }
+      },
+      "title": "Wifi",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A Squore match together with the live data reported by the tablet.",
+  "properties": {
+    "appName": {
+      "const": "Squore",
+      "title": "Appname",
+      "type": "string"
+    },
+    "appPackage": {
+      "const": "com.doubleyellow.scoreboard",
+      "title": "Apppackage",
+      "type": "string"
+    },
+    "clubs": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Clubs"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "colors": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Colors"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "countries": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Countries"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "court": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Court"
+    },
+    "customData": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Customdata"
+    },
+    "event": {
+      "$ref": "#/$defs/Event"
+    },
+    "format": {
+      "$ref": "#/$defs/Format"
+    },
+    "games": {
+      "items": {
+        "$ref": "#/$defs/Game"
+      },
+      "readOnly": true,
+      "title": "Games",
+      "type": "array"
+    },
+    "gamescores": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Gamescores"
+    },
+    "isGameBall": {
+      "title": "Isgameball",
+      "type": "boolean"
+    },
+    "isHandOut": {
+      "title": "Ishandout",
+      "type": "boolean"
+    },
+    "isMatchBall": {
+      "title": "Ismatchball",
+      "type": "boolean"
+    },
+    "isUndo": {
+      "default": false,
+      "title": "Isundo",
+      "type": "boolean"
+    },
+    "isVictoryFor": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PlayerLetter"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "lastCall": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lastcall"
+    },
+    "lastScorer": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PlayerLetter"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "liveScoreDeviceId": {
+      "title": "Livescoredeviceid",
+      "type": "string"
+    },
+    "lockState": {
+      "$ref": "#/$defs/LockStateType",
+      "default": null
+    },
+    "maxNrOfPowerPlays": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Maxnrofpowerplays"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "players": {
+      "$ref": "#/$defs/Players"
+    },
+    "result": {
+      "title": "Result",
+      "type": "string"
+    },
+    "score": {
+      "items": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Score",
+      "type": "array"
+    },
+    "scores": {
+      "items": {
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      },
+      "readOnly": true,
+      "type": "array"
+    },
+    "serveSide": {
+      "$ref": "#/$defs/ServerSide"
+    },
+    "server": {
+      "$ref": "#/$defs/ServerType"
+    },
+    "start": {
+      "title": "Start",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/LiveStatus",
+      "readOnly": true
+    },
+    "timerInfo": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/TimerInfo"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "timestamp": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Timestamp"
+    },
+    "timing": {
+      "items": {
+        "$ref": "#/$defs/Timing"
+      },
+      "title": "Timing",
+      "type": "array"
+    },
+    "when": {
+      "$ref": "#/$defs/When"
+    },
+    "winner": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "readOnly": true,
+      "title": "Winner"
+    }
+  },
+  "required": [
+    "players",
+    "event",
+    "format",
+    "metadata",
+    "appName",
+    "appPackage",
+    "court",
+    "isGameBall",
+    "isHandOut",
+    "isMatchBall",
+    "liveScoreDeviceId",
+    "result",
+    "server",
+    "serveSide",
+    "start",
+    "when",
+    "status",
+    "scores",
+    "games",
+    "winner"
+  ],
+  "title": "SquoreMatchLiveData",
+  "type": "object"
+}

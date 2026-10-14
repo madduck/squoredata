@@ -1,0 +1,11 @@
+{
+  "name": "squoredata-types",
+  "version": "0.1.0",
+  "description": "TypeScript bindings for the squoredata Pydantic models",
+  "types": "index.d.ts",
+  "files": [
+    "*.d.ts",
+    "*.schema.json"
+  ],
+  "license": "MIT"
+}

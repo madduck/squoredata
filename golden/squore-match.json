@@ -1,0 +1,34 @@
+{
+  "clubs": null,
+  "colors": null,
+  "countries": null,
+  "event": {
+    "division": "Court 1",
+    "name": "Golden Tournament"
+  },
+  "format": {
+    "numberOfGamesToWinMatch": 3,
+    "numberOfPointsToWinGame": 11,
+    "useHandInHandOutScoring": false
+  },
+  "metadata": {
+    "device": {
+      "batteryCharging": true,
+      "batteryPercentage": 42,
+      "deviceid": "squore-golden",
+      "timestamp": "2024-01-02T03:04:05.000006"
+    },
+    "language": null,
+    "shareURL": null,
+    "source": null,
+    "sourceFeedbackState": null,
+    "sourceID": "golden-match",
+    "sourcePostResultUrl": null,
+    "version": null,
+    "wifi": null
+  },
+  "players": {
+    "A": "Jane Doe",
+    "B": "Mary Major"
+  }
+}

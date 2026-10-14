@@ -1,0 +1,13 @@
+{
+  "name": "squoredata-tools",
+  "private": true,
+  "description": "Build tooling for the squoredata TypeScript bindings",
+  "scripts": {
+    "generate": "python scripts/generate_ts.py",
+    "test": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^15.0.4",
+    "typescript": "^5.7.0"
+  }
+}

@@ -55,10 +55,22 @@ GitHub account and a read token, even for a public package. JSR allows
 anonymous installs and authenticates CI through OIDC, so no registry token is
 stored as a secret.
 
-`.github/workflows/3-publish-npm-package.yml` owns the TypeScript package end to
-end. On a `v*` tag it regenerates the bindings, fails on drift, runs `npm test`,
-publishes to JSR, and attaches the npm tarball to the GitHub Release. Publishing
-an existing version fails, so the workflow is never triggered by a branch push.
+The workflows are split by trigger, and the test jobs are defined once:
+
+- `.github/workflows/_tests.yml` holds the test jobs and has no trigger of its
+  own; it is a reusable workflow (`workflow_call`).
+- `.github/workflows/0-testing.yml` calls it on every push, every pull request,
+  and on manual dispatch.
+- `.github/workflows/1-build-and-publish.yml` calls it on a `v*` tag, then
+  builds the Python distributions and the TypeScript tarball in one job, and
+  then runs three jobs in parallel: the GitHub Release, the PyPI upload, and
+  the JSR publish. Every job after the tests `needs` the build, and all of them
+  are tag-gated, so a manual run on a branch only tests and builds.
+
+Because a release is only ever published from a `v*` tag, and because publishing
+an existing version fails, no branch push can publish anything. Staleness of the
+committed TypeScript bindings is caught by the test job, which regenerates them
+and fails on any diff before the build is allowed to start.
 
 To release by hand:
 
@@ -72,7 +84,7 @@ A manual publish needs a JSR token (`npx jsr publish` prompts for it); CI does
 not. Publishing a version is irreversible, so run the full definition of done
 first.
 
-The npm workflow also attaches the output of `npm pack` to the GitHub Release,
+The build job also attaches the output of `npm pack` to the GitHub Release,
 so a consumer without any registry account can install straight from the tag:
 
 ```sh

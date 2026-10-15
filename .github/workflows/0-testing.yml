@@ -1,41 +1,15 @@
-name: Python style and unit tests
+# Run the tests on every push and pull request.
+#
+# The job definitions live in _tests.yml, which the release workflow calls as
+# well, so there is exactly one place that defines what "passing" means.
+name: Tests
 
 on:
   push:
-    branches: ["main"]
   pull_request:
-    branches: ["main"]
+  workflow_dispatch: # allows manual triggering
 
 jobs:
-  run-tests:
-    name: "Setup and run Python tests"
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.13", "3.14"]
-
-    steps:
-      - name: Check out the source
-        uses: actions/checkout@v6
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          python-version: ${{ matrix.python-version }}
-          enable-cache: true
-
-      - name: Install dependencies
-        run: uv sync --frozen --group dev
-
-      - name: Style and formatting (ruff)
-        run: uv run ruff check .
-
-      - name: Unit and integration tests (pytest)
-        run: uv run pytest
-
-      - name: Mypy check
-        run: uv run mypy --strict .
-
-      - name: Security lint (bandit)
-        run: uv run bandit -c pyproject.toml -r .
+  tests:
+    name: "Tests"
+    uses: ./.github/workflows/_tests.yml

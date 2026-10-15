@@ -57,7 +57,7 @@ npm install /path/to/squoredata/typescript
 
 The TypeScript package is published to [JSR](https://jsr.io) as
 `@madduck/squoredata`, by the tag-triggered workflow in
-`.github/workflows/3-publish-npm-package.yml`. JSR authenticates the workflow
+`.github/workflows/1-build-and-publish.yml`. JSR authenticates the workflow
 through OIDC, so no registry token is stored as a secret.
 
 First-time setup: claim the `@madduck` scope at <https://jsr.io/new> and link
@@ -85,8 +85,8 @@ npx jsr add @madduck/squoredata
 
 For Deno, `deno add jsr:@madduck/squoredata` works directly.
 
-The npm workflow also attaches the packed tarball to the GitHub Release. That
-route needs no registry and no account at all:
+The release workflow also attaches the packed tarball to the GitHub Release.
+That route needs no registry and no account at all:
 
 ```sh
 npm install https://github.com/madduck/squoredata/releases/download/v0.1.0/madduck-squoredata-0.1.0.tgz

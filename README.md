@@ -75,7 +75,7 @@ To release by hand, with the version taken from the Git tag:
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
 python scripts/stamp_version.py v0.1.1
-cd typescript && npx jsr publish
+cd typescript && npx jsr publish --allow-dirty
 ```
 
 The stamp step is what the release workflow does automatically; do not commit

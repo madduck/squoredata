@@ -89,11 +89,12 @@ To release by hand, from the tagged commit so the version is the tag itself:
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
 python scripts/stamp_version.py v0.1.1
-cd typescript && npx jsr publish
+cd typescript && npx jsr publish --allow-dirty
 ```
 
 The stamp step is what the workflow does automatically; do not commit its
-output, because the committed manifests keep the placeholder.
+output, because the committed manifests keep the placeholder.  The stamp dirties
+the tree, so jsr needs `--allow-dirty` to publish it.
 
 A manual publish needs a JSR token (`npx jsr publish` prompts for it); CI does
 not. Publishing a version is irreversible, so run the full definition of done
@@ -151,6 +152,10 @@ validators are both derived from it.
   exact `v<major>.<minor>.<patch>` tag raises, so a malformed tag fails the
   release rather than publishing a wrong version. The release workflow runs it
   before `npm pack` and before `jsr publish`.
+- Stamping leaves the tree dirty, and `jsr publish` refuses a dirty tree. The
+  publish step therefore passes `--allow-dirty`. Committing the stamp in the
+  runner instead would attest provenance for a commit that exists nowhere, so
+  the dirty stamp plus the real tag is the lesser evil.
 - A per-commit version in the committed manifests would make them differ on
   every commit and turn the CI drift check below into a false positive that
   carries no information. That is why the version is release metadata stamped

@@ -186,5 +186,11 @@ jobs:
         run: python scripts/stamp_version.py "$GITHUB_REF_NAME"
 
       - name: Publish to JSR
-        run: npx --yes jsr publish
+        # Stamping the version modified the two manifests, so the tree is
+        # dirty by design and jsr refuses to publish it without --allow-dirty.
+        # The guard it disables protects against publishing uncommitted work;
+        # here the tag gates the job and the stamp step is the only change.
+        # Committing in the runner instead would attest provenance for a commit
+        # that exists nowhere, so keep the dirty stamp and the real tag.
+        run: npx --yes jsr publish --allow-dirty
         working-directory: typescript

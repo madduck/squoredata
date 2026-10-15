@@ -123,6 +123,19 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      # index.js imports the subpath "ajv/dist/2020.js", which Deno resolves
+      # against a real node_modules.  The "imports" map in jsr.json only
+      # rewrites the bare "ajv" specifier, so publishing without a local
+      # install fails with "Could not find ajv in a node_modules folder".
+      # Deno walks up from typescript/, so a root install is enough.
+      - name: Install Node dependencies
+        run: npm ci
+
       # JSR publishes the source tree, not the tarball, so the artifacts are
       # not needed here; the checkout is the package.
       - name: Publish to JSR

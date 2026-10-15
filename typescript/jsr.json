@@ -1,0 +1,13 @@
+{
+  "name": "@madduck/squoredata",
+  "version": "0.1.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./index.js",
+    "./schemas/SquoreMatch.schema.json": "./schemas/SquoreMatch.schema.json",
+    "./schemas/SquoreMatchLiveData.schema.json": "./schemas/SquoreMatchLiveData.schema.json"
+  },
+  "imports": {
+    "ajv": "npm:ajv@^8.17.1"
+  }
+}

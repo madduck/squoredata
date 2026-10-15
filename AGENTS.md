@@ -47,18 +47,37 @@ fields and therefore part of the serialized (wire) format.
 
 ## Publishing
 
-The Python package and the npm package share one version, taken from
-`pyproject.toml`. To release the npm package by hand:
+The Python package and the JSR package share one version, taken from
+`pyproject.toml`. The TypeScript package is published to
+[JSR](https://jsr.io) as `@madduck/squoredata`, not to npmjs. npmjs is
+unavailable to us, and GitHub Packages would force every consumer to hold a
+GitHub account and a read token, even for a public package. JSR allows
+anonymous installs and authenticates CI through OIDC, so no registry token is
+stored as a secret.
+
+`.github/workflows/3-publish-npm-package.yml` owns the TypeScript package end to
+end. On a `v*` tag it regenerates the bindings, fails on drift, runs `npm test`,
+publishes to JSR, and attaches the npm tarball to the GitHub Release. Publishing
+an existing version fails, so the workflow is never triggered by a branch push.
+
+To release by hand:
 
 ```sh
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
-npm --prefix typescript publish --access public
+cd typescript && npx jsr publish
 ```
 
-`--access public` is not optional: scoped packages default to private, and a
-private publish requires a paid npm plan. Publishing a version is irreversible,
-so run the full definition of done first.
+A manual publish needs a JSR token (`npx jsr publish` prompts for it); CI does
+not. Publishing a version is irreversible, so run the full definition of done
+first.
+
+The npm workflow also attaches the output of `npm pack` to the GitHub Release,
+so a consumer without any registry account can install straight from the tag:
+
+```sh
+npm install https://github.com/madduck/squoredata/releases/download/v0.1.0/madduck-squoredata-0.1.0.tgz
+```
 
 ## Conventions
 
@@ -86,24 +105,36 @@ so run the full definition of done first.
 
 ## TypeScript generation
 
-The npm package is `@madduck/squoredata`, published from `typescript/`. The
-JSON Schema is the single source of truth: the interfaces and the runtime
+The TypeScript package is `@madduck/squoredata`, published from `typescript/`.
+The JSON Schema is the single source of truth: the interfaces and the runtime
 validators are both derived from it.
 
 - `scripts/generate_ts.py` uses `model_json_schema(mode="serialization")`, which
   is the wire format and therefore includes the computed fields.
+- `scripts/generate_ts.py` also emits `typescript/jsr.json`, the JSR manifest.
+  Like `typescript/package.json`, its version comes from `pyproject.toml` and is
+  never set by hand. Its `imports` map resolves the bare `ajv` specifier to
+  `npm:ajv@^8.17.1`, because JSR does not resolve bare specifiers on its own.
+- `index.js` starts with `// @ts-self-types="./index.d.ts"`. JSR otherwise
+  cannot tell that the declaration file describes the JavaScript entrypoint and
+  warns about an untyped entrypoint.
 - The generator writes `<Model>.schema.json` and `<Model>.d.ts` for json2ts's
   own use, plus the shippable artefacts: `schemas/<Model>.schema.json`,
-  `index.js`, `index.d.ts`, `package.json`, and a copy of `LICENSE`.
+  `index.js`, `index.d.ts`, `package.json`, `jsr.json`, and a copy of
+  `LICENSE`.
 - Because Pydantic emits no `$schema` key, the generator stamps
   `https://json-schema.org/draft/2020-12/schema` into every schema. Without it
   Ajv would fall back to draft-07 while the models follow draft 2020-12.
-- The generated `package.json` is built from a template inside
-  `generate_ts.py`; its `version` is read from `pyproject.toml`, so the npm and
-  Python versions always mirror each other. The version is **not** set by hand.
+- The generated `package.json` and `jsr.json` are built from templates inside
+  `generate_ts.py`; their `version` is read from `pyproject.toml`, so the JSR
+  and Python versions always mirror each other. The version is **not** set by
+  hand.
 - `index.js` compiles the schemas with Ajv
   (`ajv/dist/2020.js`) and exports `validateSquoreMatch`,
   `validateSquoreMatchLiveData`, and `schemas`.
+- JSR has no `files` allowlist equivalent to npm's, so it publishes
+  `typescript/tests/` along with the artefacts. That is harmless and is left
+  alone rather than restructured.
 - `index.d.ts` re-exports only the public interfaces with explicit
   `export type { X } from "./X"`. A plain `export *` collides, because
   `json-schema-to-typescript` emits dozens of helper type aliases (`A`, `B1`, …)
@@ -112,7 +143,7 @@ validators are both derived from it.
   tuples to lists. Without it, json2ts loses the element typing and emits
   `[unknown, unknown]`.
 - Regenerate with `python scripts/generate_ts.py` after any model change, and
-  commit the output.
+  commit the output, including `jsr.json`.
 
 ### Validation scope
 
@@ -211,10 +242,12 @@ npm install
 python scripts/generate_ts.py
 git diff --exit-code typescript/
 npm test
+(cd typescript && npx jsr publish --dry-run --allow-dirty)
 ```
 
 `npm test` runs both the type check (`tsc --noEmit`) and the runtime golden
-tests (`node --test`).
+tests (`node --test`). The JSR dry run catches a manifest or entrypoint problem
+before a real, irreversible publish.
 
 ## Commits
 

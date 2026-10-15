@@ -49,22 +49,51 @@ Install the generated package into another project from a published release,
 or from the local directory:
 
 ```sh
-npm install @madduck/squoredata
+npx jsr add @madduck/squoredata
 npm install /path/to/squoredata/typescript
 ```
 
 ### Publishing
 
-The npm package is released by hand, with the version taken from
-`pyproject.toml`:
+The TypeScript package is published to [JSR](https://jsr.io) as
+`@madduck/squoredata`, by the tag-triggered workflow in
+`.github/workflows/3-publish-npm-package.yml`. JSR authenticates the workflow
+through OIDC, so no registry token is stored as a secret.
+
+First-time setup: claim the `@madduck` scope at <https://jsr.io/new> and link
+it to the GitHub account that owns this repository.
+
+To release by hand, with the version taken from `pyproject.toml`:
 
 ```sh
 python scripts/generate_ts.py
-npm --prefix typescript publish --access public
+git diff --exit-code typescript/   # must be clean before publishing
+cd typescript && npx jsr publish
 ```
 
-`--access public` is required: scoped packages default to private, and a
-private publish needs a paid plan.
+A local publish needs a JSR token; CI does not. Publishing a version that
+already exists fails, so always release from a tag.
+
+### Installing
+
+JSR packages install into a Node project without an npmjs account. In a Node
+project, use the JSR CLI:
+
+```sh
+npx jsr add @madduck/squoredata
+```
+
+For Deno, `deno add jsr:@madduck/squoredata` works directly.
+
+The npm workflow also attaches the packed tarball to the GitHub Release. That
+route needs no registry and no account at all:
+
+```sh
+npm install https://github.com/madduck/squoredata/releases/download/v0.1.0/madduck-squoredata-0.1.0.tgz
+```
+
+The tarball has no version range and does not update, so prefer JSR unless you
+need a fully offline or account-free install.
 
 ## Golden tests
 

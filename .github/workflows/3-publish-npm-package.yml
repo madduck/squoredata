@@ -1,0 +1,75 @@
+name: Publish the npm package to JSR and attach it to the release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch: # allows manual triggering
+
+jobs:
+  publish-npm-package:
+    name: "Publish the npm package"
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    # contents: write to attach the tarball to the release; id-token: write so
+    # JSR can verify the repository through OIDC instead of a stored token.
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Check out the source
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install Python dependencies
+        run: uv sync --frozen --group dev
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Regenerate the TypeScript bindings
+        run: uv run python scripts/generate_ts.py
+
+      # The committed bindings are what gets published.  If regeneration changes
+      # them, the tag was cut from a tree whose generated output is stale, and
+      # the published package would not match the models.
+      - name: Fail if the generated bindings are stale
+        run: git diff --exit-code typescript/
+
+      - name: Type-check and run the golden tests (npm)
+        run: npm test
+
+      # JSR is the published registry.  It allows anonymous installs, which
+      # npmjs and GitHub Packages do not give us.
+      #
+      # No JSR token is needed: the id-token permission lets JSR verify that
+      # this workflow runs in the madduck/squoredata repository, which owns the
+      # @madduck scope.  Publishing a version that already exists fails, so this
+      # job is tag-gated and never runs on a branch push.
+      - name: Publish to JSR
+        run: npx --yes jsr publish
+        working-directory: typescript
+
+      # The tarball is the registry-free fallback: it installs straight from the
+      # release with `npm install <url>`, which needs no account anywhere.
+      - name: Pack the TypeScript package
+        run: npm pack --pack-destination dist
+        working-directory: typescript
+
+      - name: Attach the tarball to the GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: typescript/dist/*.tgz

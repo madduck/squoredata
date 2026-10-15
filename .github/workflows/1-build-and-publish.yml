@@ -1,4 +1,4 @@
-name: Build package and publish to PyPi, and make a release
+name: Build package, publish to PyPi, and make a release
 
 on:
   push:
@@ -70,8 +70,12 @@ jobs:
           name: python-package-distributions
           path: dist/
 
+      # The npm tarball is attached by the npm publishing workflow, which owns
+      # the TypeScript package end to end.
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/*.whl dist/*.tar.gz
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
           generate_release_notes: true

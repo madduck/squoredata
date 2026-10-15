@@ -60,6 +60,12 @@ jobs:
       - name: Build the Python package
         run: python -m build
 
+      # The generated manifests carry the placeholder version, because they are
+      # version-independent artefacts.  Stamp the version from the tag so the
+      # tarball and the JSR package carry a real version.
+      - name: Stamp the release version into the TypeScript manifests
+        run: python scripts/stamp_version.py "$GITHUB_REF_NAME"
+
       # The tarball is the registry-free fallback: it installs straight from
       # the release with `npm install <url>`, which needs no account anywhere.
       - name: Pack the TypeScript package
@@ -123,8 +129,18 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
       # JSR publishes the source tree, not the tarball, so the artifacts are
-      # not needed here; the checkout is the package.
+      # not needed here; the checkout is the package.  The manifests carry the
+      # placeholder version from the generator, so the tag is stamped into them
+      # before the publish, exactly as the build job does for the tarball.
+      - name: Stamp the release version into the TypeScript manifests
+        run: python scripts/stamp_version.py "$GITHUB_REF_NAME"
+
       - name: Publish to JSR
         run: npx --yes jsr publish
         working-directory: typescript

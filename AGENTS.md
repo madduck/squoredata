@@ -41,15 +41,26 @@ fields and therefore part of the serialized (wire) format.
 - `scripts/generate_ts.py` — renders JSON Schema from the models, converts it
   to TypeScript, and writes the runtime validators and package metadata.
 - `scripts/make_golden.py` — regenerates `golden/*.json`.
+- `scripts/stamp_version.py` — writes the tag-derived version into the generated
+  TypeScript manifests; the release workflow runs it before packing or
+  publishing.
+- `scripts/__init__.py` — package marker, so `scripts.generate_ts` has one
+  module name for mypy.
 - `typescript/` — the published npm package: generated `.d.ts` files, the Ajv
   validators (`index.js`), `schemas/`, `package.json`, and `LICENSE`.
 - `hatch_build.py` — Hatchling hook that runs the generator.
 
 ## Publishing
 
-The Python package and the JSR package share one version, taken from
-`pyproject.toml`. The TypeScript package is published to
-[JSR](https://jsr.io) as `@madduck/squoredata`, not to npmjs. npmjs is
+The Python package and the JSR package share one version, derived from the Git
+tag. `pyproject.toml` declares the version dynamic and `hatch-vcs` resolves it,
+so there is no version literal to forget. `raw-options = { local_scheme =
+"no-local-version" }` drops the PEP 440 local segment, which npm and JSR would
+reject. The generated TypeScript manifests are version-independent: they
+always carry the placeholder `0.0.0`, and the release workflow stamps the
+tag-derived version into them with `scripts/stamp_version.py` before it packs
+or publishes. The TypeScript package is published to [JSR](https://jsr.io) as
+`@madduck/squoredata`, not to npmjs. npmjs is
 unavailable to us, and GitHub Packages would force every consumer to hold a
 GitHub account and a read token, even for a public package. JSR allows
 anonymous installs and authenticates CI through OIDC, so no registry token is
@@ -72,13 +83,17 @@ an existing version fails, no branch push can publish anything. Staleness of the
 committed TypeScript bindings is caught by the test job, which regenerates them
 and fails on any diff before the build is allowed to start.
 
-To release by hand:
+To release by hand, from the tagged commit so the version is the tag itself:
 
 ```sh
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
+python scripts/stamp_version.py v0.1.1
 cd typescript && npx jsr publish
 ```
+
+The stamp step is what the workflow does automatically; do not commit its
+output, because the committed manifests keep the placeholder.
 
 A manual publish needs a JSR token (`npx jsr publish` prompts for it); CI does
 not. Publishing a version is irreversible, so run the full definition of done
@@ -114,6 +129,9 @@ npm install https://github.com/madduck/squoredata/releases/download/v0.1.0/maddu
   inline.
 - Test names are descriptive sentences; sections are separated by
   `# --- Name ---` comment rules.
+- `tests/test_version.py` pins the release-tag to semver translation in
+  `scripts/stamp_version.py`, including the tags that must raise, and checks
+  that the generator writes the placeholder.
 
 ## TypeScript generation
 
@@ -124,9 +142,19 @@ validators are both derived from it.
 - `scripts/generate_ts.py` uses `model_json_schema(mode="serialization")`, which
   is the wire format and therefore includes the computed fields.
 - `scripts/generate_ts.py` also emits `typescript/jsr.json`, the JSR manifest.
-  Like `typescript/package.json`, its version comes from `pyproject.toml` and is
-  never set by hand. Its `imports` map resolves the bare `ajv` specifier to
-  `npm:ajv@^8.17.1`, because JSR does not resolve bare specifiers on its own.
+  Like `typescript/package.json`, it always carries the placeholder version
+  `0.0.0` and is never set by hand. Its `imports` map resolves the bare `ajv`
+  specifier to `npm:ajv@^8.17.1`, because JSR does not resolve bare specifiers
+  on its own.
+- `scripts/stamp_version.py` turns a release tag into a valid semver and writes
+  it into both manifests: `v0.1.1` becomes `0.1.1`. Anything that is not an
+  exact `v<major>.<minor>.<patch>` tag raises, so a malformed tag fails the
+  release rather than publishing a wrong version. The release workflow runs it
+  before `npm pack` and before `jsr publish`.
+- A per-commit version in the committed manifests would make them differ on
+  every commit and turn the CI drift check below into a false positive that
+  carries no information. That is why the version is release metadata stamped
+  at publish time rather than part of the generated artefacts.
 - `index.js` starts with `// @ts-self-types="./index.d.ts"`. JSR otherwise
   cannot tell that the declaration file describes the JavaScript entrypoint and
   warns about an untyped entrypoint.
@@ -138,9 +166,9 @@ validators are both derived from it.
   `https://json-schema.org/draft/2020-12/schema` into every schema. Without it
   Ajv would fall back to draft-07 while the models follow draft 2020-12.
 - The generated `package.json` and `jsr.json` are built from templates inside
-  `generate_ts.py`; their `version` is read from `pyproject.toml`, so the JSR
-  and Python versions always mirror each other. The version is **not** set by
-  hand.
+  `generate_ts.py`; their `version` is derived from the Git tag, the same
+  source `hatch-vcs` uses for the Python package, so the JSR and Python
+  versions always mirror each other. The version is **not** set by hand.
 - `index.js` compiles the schemas with Ajv
   (`ajv/dist/2020.js`) and exports `validateSquoreMatch`,
   `validateSquoreMatchLiveData`, and `schemas`.
@@ -189,7 +217,8 @@ file or a model, confirm that both sides actually reject a deliberate mismatch.
 
 - `pip install -e .[dev]` for development; `python -m build` for a release.
 - `[build-system].requires` includes `pydantic`, because the build hook imports
-  the models to render their schemas.
+  the models to render their schemas, and `hatch-vcs`, which resolves the
+  dynamic version from the Git tag.
 - `hatch_build.py` runs the generator **only** when `node_modules/.bin/json2ts`
   exists. A build must never reach the network, so an isolated build without
   Node tooling ships the committed bindings as they are. Drift in the committed
@@ -278,6 +307,10 @@ Follow the user-level Git rules. In addition:
 - Do not add a second Bandit configuration file; `pyproject.toml` is the only
   one, and Bandit must be invoked with `-c pyproject.toml`.
 - Do not commit generated TypeScript without regenerating it from the models.
+- Do not reintroduce a literal project version. The Git tag is the single
+  source of truth; `pyproject.toml` keeps `dynamic = ["version"]`.
+- Do not commit a stamped `typescript/package.json` or `typescript/jsr.json`.
+  The committed manifests keep the placeholder; only the release stamps them.
 - Do not let a build reach the network; the hook guards against this.
 - Do not weaken the strict mypy settings or `extra="forbid"` to make something
   pass.

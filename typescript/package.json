@@ -1,6 +1,6 @@
 {
   "name": "@madduck/squoredata",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "TypeScript bindings and JSON Schema validators for the squoredata Pydantic models",
   "license": "MIT",
   "repository": {

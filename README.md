@@ -39,8 +39,14 @@ The npm package is published as `@madduck/squoredata`. It ships:
 - `index.js`, `index.d.ts` — Ajv-backed validators and the `schemas` object
 - `schemas/*.schema.json` — the schema documents, addressable on their own
 
-The package version mirrors the Python version, so the generator reads
-`pyproject.toml` and writes the version into `typescript/package.json`.
+The package version mirrors the Python version, and both come from the Git
+tag. The generated manifests are version-independent artefacts: they describe
+the models, not a release, so they always carry the placeholder `0.0.0`. The
+release workflow stamps the tag-derived version into `typescript/package.json`
+and `typescript/jsr.json` with `scripts/stamp_version.py` before `npm pack` and
+before `jsr publish`. Because the placeholder never changes, the committed
+manifests change only when the models do, and CI's staleness check stays
+meaningful.
 
 The Hatch build hook (`hatch_build.py`) runs the generator before a wheel is
 built, so a release can never carry stale bindings.
@@ -63,13 +69,17 @@ through OIDC, so no registry token is stored as a secret.
 First-time setup: claim the `@madduck` scope at <https://jsr.io/new> and link
 it to the GitHub account that owns this repository.
 
-To release by hand, with the version taken from `pyproject.toml`:
+To release by hand, with the version taken from the Git tag:
 
 ```sh
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
+python scripts/stamp_version.py v0.1.1
 cd typescript && npx jsr publish
 ```
+
+The stamp step is what the release workflow does automatically; do not commit
+its output, because the committed manifests keep the placeholder version.
 
 A local publish needs a JSR token; CI does not. Publishing a version that
 already exists fails, so always release from a tag.

@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling", "pydantic"]
+requires = ["hatchling", "hatch-vcs", "pydantic"]
 build-backend = "hatchling.build"
 
 [project]
 name = "squoredata"
-version = "0.1.0"
+dynamic = ["version"]
 authors = [
   { name = "martin f. krafft", email = "squoredata@pobox.madduck.net" },
 ]
@@ -30,6 +30,19 @@ dev = [
   "pytest-ruff>=0.5",
   "ruff>=0.17.0",
 ]
+
+[tool.hatch.version]
+# The version is derived from the Git tag, so there is one source of truth and
+# no hand-edited version to forget.  On a tagged commit that is the tag itself
+# (for example ``0.1.1``); elsewhere hatch-vcs produces a PEP 440 development
+# version such as ``0.1.2.dev0``.  The TypeScript manifests are stamped from
+# the same tag at release time by ``scripts/stamp_version.py``, so the two
+# sides are released together.
+source = "vcs"
+# Drop the ``+g<sha>.d<date>`` local segment.  It adds nothing a consumer uses,
+# and npm and JSR require a valid semver, which a PEP 440 local segment is not.
+raw-options = { local_scheme = "no-local-version" }
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/squoredata"]
 

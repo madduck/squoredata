@@ -16,15 +16,15 @@ Usage::
     python scripts/generate_ts.py
 
 The generated files live under ``typescript/`` and are committed to the
-repository.  The version of the npm package mirrors the Python package version
-in ``pyproject.toml``.
+repository.  The generated bindings are version-independent: they carry the
+placeholder ``0.0.0``, and the release workflow stamps the version from the Git
+tag before it publishes.
 """
 
 import json
 import shutil
 import subprocess  # nosec B404
 import sys
-import tomllib
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -73,13 +73,16 @@ def _json2ts_command() -> list[str]:
 
 
 def _version() -> str:
-    """Return the project version, read from ``pyproject.toml``.
+    """Return the version the generated manifests carry.
 
-    The npm package version mirrors the Python package version, so that the two
-    sides of the contract are always released together.
+    The generated bindings are version-independent artefacts: they describe the
+    models, not a release.  The version is release metadata, so it is stamped
+    from the Git tag by the release workflow, which rewrites the ``version``
+    field before it publishes.  Writing a fixed placeholder here keeps the
+    committed manifests stable, so CI's staleness check fires only when the
+    models actually changed.
     """
-    with (REPO_ROOT / "pyproject.toml").open("rb") as handle:
-        return str(tomllib.load(handle)["project"]["version"])
+    return "0.0.0"
 
 
 def _write_schemas() -> dict[str, Path]:
@@ -216,7 +219,7 @@ def _write_index_js() -> None:
 
 
 def _write_package_json() -> None:
-    """Write the npm ``package.json``, with the version taken from pyproject."""
+    """Write the npm ``package.json``, with the placeholder version."""
     payload = {
         "name": NPM_PACKAGE_NAME,
         "version": _version(),
@@ -264,12 +267,12 @@ def _write_package_json() -> None:
 
 
 def _write_jsr_json() -> None:
-    """Write the JSR manifest, with the version taken from pyproject.
+    """Write the JSR manifest, with the placeholder version.
 
     JSR is the published registry for the TypeScript package.  Unlike npm it
     allows anonymous installs, and it authenticates CI through OIDC, so no
     registry token has to be stored as a secret.  The manifest mirrors the
-    ``package.json``: one version, read from ``pyproject.toml``.
+    ``package.json``: one version, stamped from the Git tag at release time.
     """
     payload = {
         "name": NPM_PACKAGE_NAME,

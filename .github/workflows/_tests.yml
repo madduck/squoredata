@@ -3,7 +3,7 @@
 # This file has no trigger of its own.  0-testing.yml calls it on every push
 # and pull request; 1-build-and-publish.yml calls it before it builds, so a
 # release can never be published from a tree that does not pass the tests.
-name: Tests
+name: Reusable tests (not run directly)
 
 on:
   workflow_call:

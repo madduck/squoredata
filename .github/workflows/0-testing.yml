@@ -2,7 +2,7 @@
 #
 # The job definitions live in _tests.yml, which the release workflow calls as
 # well, so there is exactly one place that defines what "passing" means.
-name: Tests
+name: Unit and style tests
 
 on:
   push:

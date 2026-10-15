@@ -11,7 +11,7 @@
 #      tarball, and uploads both as artifacts.
 #   3. `github-release`, `publish-to-pypi`, and `publish-to-jsr` run in
 #      parallel, strictly after `build`, and consume those artifacts.
-name: Build package, publish to PyPI and JSR, and make a release
+name: Build package, make a release, publish to PyPI and JSR
 
 on:
   push:

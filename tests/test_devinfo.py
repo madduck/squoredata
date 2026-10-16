@@ -1,5 +1,8 @@
 from datetime import datetime, timezone
 
+import pytest
+from pydantic import ValidationError
+
 from squoredata import BatteryStatus, DeviceInfo, SquoreDeviceInfo
 
 
@@ -63,3 +66,14 @@ def test_squore_custom_data_is_kept() -> None:
         customData={"table": 7},
     )
     assert info.customData == {"table": 7}
+
+
+def test_squore_device_info_is_strict_about_unknown_fields() -> None:
+    with pytest.raises(ValidationError):
+        SquoreDeviceInfo.model_validate(
+            {
+                "batteryCharging": True,
+                "batteryPercentage": 42,
+                "unknown": "value",
+            }
+        )

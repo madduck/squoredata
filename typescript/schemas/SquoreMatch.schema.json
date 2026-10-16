@@ -271,6 +271,7 @@
       "type": "object"
     },
     "SquoreDeviceInfo": {
+      "additionalProperties": false,
       "description": "Device information as reported by a Squore tablet.",
       "properties": {
         "batteryCharging": {

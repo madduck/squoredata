@@ -97,7 +97,6 @@ export interface SquoreDeviceInfo {
   customData?: Customdata;
   deviceid?: Deviceid;
   timestamp?: Timestamp;
-  [k: string]: unknown;
 }
 /**
  * The WiFi details a device is connected to.

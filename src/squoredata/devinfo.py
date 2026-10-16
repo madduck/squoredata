@@ -45,7 +45,7 @@ class DeviceInfo(BaseModel):
 _NONEXISTENT = object()
 
 
-class SquoreDeviceInfo(DeviceInfo):
+class SquoreDeviceInfo(DeviceInfo, extra="forbid"):
     """Device information as reported by a Squore tablet."""
 
     batteryCharging: bool

@@ -50,6 +50,7 @@ class SquoreDeviceInfo(DeviceInfo):
 
     batteryCharging: bool
     batteryPercentage: int
+    customData: dict[str, Any] | None = None
 
     @model_validator(mode="before")
     @classmethod

@@ -18,6 +18,9 @@ export type Numberofpointstowingame = number;
 export type Usehandinhandoutscoring = boolean;
 export type Batterycharging = boolean;
 export type Batterypercentage = number;
+export type Customdata = {
+  [k: string]: unknown;
+} | null;
 export type Deviceid = string | null;
 export type Timestamp = string | null;
 export type Language = string | null;
@@ -91,6 +94,7 @@ export interface Metadata {
 export interface SquoreDeviceInfo {
   batteryCharging: Batterycharging;
   batteryPercentage: Batterypercentage;
+  customData?: Customdata;
   deviceid?: Deviceid;
   timestamp?: Timestamp;
   [k: string]: unknown;

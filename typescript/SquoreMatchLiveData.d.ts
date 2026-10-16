@@ -44,6 +44,9 @@ export type Livescoredeviceid = string;
 export type Maxnrofpowerplays = number | null;
 export type Batterycharging = boolean;
 export type Batterypercentage = number;
+export type Customdata1 = {
+  [k: string]: unknown;
+} | null;
 export type Deviceid = string | null;
 export type Timestamp = string | null;
 export type Language = string | null;
@@ -196,6 +199,7 @@ export interface Metadata {
 export interface SquoreDeviceInfo {
   batteryCharging: Batterycharging;
   batteryPercentage: Batterypercentage;
+  customData?: Customdata1;
   deviceid?: Deviceid;
   timestamp?: Timestamp;
   [k: string]: unknown;

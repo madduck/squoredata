@@ -529,6 +529,19 @@
           "title": "Batterypercentage",
           "type": "integer"
         },
+        "customData": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Customdata"
+        },
         "deviceid": {
           "anyOf": [
             {

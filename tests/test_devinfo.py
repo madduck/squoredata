@@ -49,3 +49,17 @@ def test_squore_device_field_renamed_to_deviceid() -> None:
         {"device": "dev", "batteryCharging": True, "batteryPercentage": 1}
     )
     assert info.deviceid == "dev"
+
+
+def test_squore_custom_data_defaults_to_none() -> None:
+    info = SquoreDeviceInfo(batteryCharging=True, batteryPercentage=42)
+    assert info.customData is None
+
+
+def test_squore_custom_data_is_kept() -> None:
+    info = SquoreDeviceInfo(
+        batteryCharging=True,
+        batteryPercentage=42,
+        customData={"table": 7},
+    )
+    assert info.customData == {"table": 7}

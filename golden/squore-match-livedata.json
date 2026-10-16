@@ -401,6 +401,7 @@
     "device": {
       "batteryCharging": true,
       "batteryPercentage": 42,
+      "customData": null,
       "deviceid": "squore-golden",
       "timestamp": "2024-01-02T03:04:05.000006"
     },

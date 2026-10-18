@@ -747,7 +747,7 @@
     "court": {
       "anyOf": [
         {
-          "type": "integer"
+          "type": "string"
         },
         {
           "type": "null"

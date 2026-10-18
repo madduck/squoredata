@@ -77,7 +77,7 @@ class SquoreMatchLiveData(SquoreMatch, extra="forbid"):
 
     appName: Literal["Squore"]
     appPackage: Literal["com.doubleyellow.scoreboard"]
-    court: int | None
+    court: str | None
     timestamp: datetime | None = None
     customData: dict[str, Any] | None = None
     gamescores: str | None = None
@@ -228,6 +228,6 @@ class SquoreMatchLiveData(SquoreMatch, extra="forbid"):
     @field_validator("court", mode="before")
     @classmethod
     def handle_no_court_as_string(
-        cls, data: Literal["null"] | int | None
-    ) -> int | None:
+        cls, data: Literal["null"] | str | None
+    ) -> str | None:
         return None if data == "null" else data

@@ -25,6 +25,26 @@ def test_match_court_nullstring_to_none(LiveDataFactory: LiveDataFactoryType) ->
     assert SquoreMatchLiveData.model_validate(bad_model_dump).court is None
 
 
+def test_match_court_keeps_arbitrary_string(
+    LiveDataFactory: LiveDataFactoryType,
+) -> None:
+    assert LiveDataFactory(court="Court 1").court == "Court 1"
+
+
+def test_match_court_accepts_none(
+    LiveDataFactory: LiveDataFactoryType,
+) -> None:
+    assert LiveDataFactory(court=None).court is None
+
+
+def test_match_court_roundtrips_through_wire_format(
+    LiveDataFactory: LiveDataFactoryType,
+) -> None:
+    model = LiveDataFactory(court="Court 1")
+    wire = model.model_dump(exclude_computed_fields=True)
+    assert SquoreMatchLiveData.model_validate(wire).court == "Court 1"
+
+
 def test_match_warmup(
     LiveDataFactory: LiveDataFactoryType, timerinfo_warmup: TimerInfo
 ) -> None:

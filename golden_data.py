@@ -104,7 +104,7 @@ def golden_match_livedata() -> SquoreMatchLiveData:
         event=_event(),
         format=_format(),
         metadata=_metadata(),
-        court=1,
+        court="1",
         timestamp=NOW,
         appName="Squore",
         appPackage="com.doubleyellow.scoreboard",

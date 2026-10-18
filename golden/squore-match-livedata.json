@@ -4,7 +4,7 @@
   "clubs": null,
   "colors": null,
   "countries": null,
-  "court": 1,
+  "court": "1",
   "customData": null,
   "event": {
     "division": "Court 1",

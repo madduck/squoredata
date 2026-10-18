@@ -67,8 +67,8 @@ def sqformat() -> Format:
 
 
 @pytest.fixture
-def sqcourt() -> int:
-    return 42
+def sqcourt() -> str:
+    return "42"
 
 
 @pytest.fixture
@@ -169,7 +169,7 @@ def GameDataFactory(now: datetime) -> GameDataFactoryType:
 def livedata_match_base(
     GameDataFactory: GameDataFactoryType,
     squoreappdata: AppDataLiterals,
-    sqcourt: int,
+    sqcourt: str,
     sqplayers: Players,
     sqtime: WhenT,
     sqformat: Format,

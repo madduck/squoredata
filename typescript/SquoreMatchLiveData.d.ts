@@ -13,7 +13,7 @@ export type A1 = string | null;
 export type B1 = string | null;
 export type A2 = string | null;
 export type B2 = string | null;
-export type Court = number | null;
+export type Court = string | null;
 export type Customdata = {
   [k: string]: unknown;
 } | null;

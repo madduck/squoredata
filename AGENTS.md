@@ -111,7 +111,7 @@ repository and this workflow must be registered as a trusted publisher on
 npmjs.com before the first release does.  Publishing into the `@madduck` scope
 needs `--access public`, or npm would default a scoped package to private.
 
-Two npm quirks shape that step, and both cost a broken release to find:
+Three npm quirks shape that step, and each one cost a broken release to find:
 
 - The tarball argument needs a leading `./`.  npm reads any slash-containing
   argument without one as a `<host>/<path>` git spec, so `dist/x.tgz` becomes
@@ -122,6 +122,24 @@ Two npm quirks shape that step, and both cost a broken release to find:
   workflow sends prerelease tags to `next`, which keeps the default
   `npm install @madduck/squoredata` on the last stable release; opt in with
   `@next`.  Stable tags carry no `--tag` and go to `latest`.
+- The npm CLI version matters.  Trusted publishing needs npm 11.5.1 or later
+  and staged publishing needs 11.15.0 or later, so the job pins npm rather
+  than trusting the copy bundled with Node.  A version that is too old fails
+  as a registry error that does not name the CLI.
+
+A `404 Not Found - PUT https://registry.npmjs.org/@scope%2fname` from an OIDC
+publish is not a path or a version problem: the tarball was read and the
+provenance statement was signed before npm answers.  npm reports an
+unrecognised or unauthorised publishing identity as 404, so check the trusted
+publisher on the package's access page (`/package/@madduck/squoredata/access`)
+and its "Allowed actions" setting, which must permit direct `npm publish` and
+not only `npm stage publish`.
+
+A JSR publish that dies with `connection reset` while fetching the publishing
+status is a transient failure at the Cloudflare edge, before any upload
+starts.  The job therefore retries it three times with a growing delay; a
+publish that did complete fails the retry on the existing version rather than
+publishing twice.
 
 The build job also attaches the output of `npm pack` to the GitHub Release,
 so a consumer without any registry account can install straight from the tag:

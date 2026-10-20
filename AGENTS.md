@@ -59,12 +59,12 @@ so there is no version literal to forget. `raw-options = { local_scheme =
 reject. The generated TypeScript manifests are version-independent: they
 always carry the placeholder `0.0.0`, and the release workflow stamps the
 tag-derived version into them with `scripts/stamp_version.py` before it packs
-or publishes. The TypeScript package is published to [JSR](https://jsr.io) as
-`@madduck/squoredata`, not to npmjs. npmjs is
-unavailable to us, and GitHub Packages would force every consumer to hold a
-GitHub account and a read token, even for a public package. JSR allows
-anonymous installs and authenticates CI through OIDC, so no registry token is
-stored as a secret.
+or publishes. The TypeScript package is published to
+[npmjs](https://www.npmjs.com) and [JSR](https://jsr.io) as
+`@madduck/squoredata`. GitHub Packages was rejected because it would force
+every consumer to hold a GitHub account and a read token, even for a public
+package. Both npm and JSR authenticate CI through OIDC, so no registry token
+is stored as a secret.
 
 The workflows are split by trigger, and the test jobs are defined once:
 
@@ -74,9 +74,10 @@ The workflows are split by trigger, and the test jobs are defined once:
   and on manual dispatch.
 - `.github/workflows/1-build-and-publish.yml` calls it on a `v*` tag, then
   builds the Python distributions and the TypeScript tarball in one job, and
-  then runs three jobs in parallel: the GitHub Release, the PyPI upload, and
-  the JSR publish. Every job after the tests `needs` the build, and all of them
-  are tag-gated, so a manual run on a branch only tests and builds.
+  then runs four jobs in parallel: the GitHub Release, the PyPI upload, the
+  JSR publish, and the npm publish. Every job after the tests `needs` the
+  build, and all of them are tag-gated, so a manual run on a branch only tests
+  and builds.
 
 Because a release is only ever published from a `v*` tag, and because publishing
 an existing version fails, no branch push can publish anything. Staleness of the
@@ -89,16 +90,26 @@ To release by hand, from the tagged commit so the version is the tag itself:
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
 python scripts/stamp_version.py v0.1.1
+npm publish typescript --access public
 cd typescript && npx jsr publish --allow-dirty
 ```
 
 The stamp step is what the workflow does automatically; do not commit its
 output, because the committed manifests keep the placeholder.  The stamp dirties
-the tree, so jsr needs `--allow-dirty` to publish it.
+the tree, so jsr needs `--allow-dirty` to publish it.  npm reads the version
+from the tarball's `package.json`, so no stamp is needed for the npm route when
+publishing the artefact the build job packed.
 
-A manual publish needs a JSR token (`npx jsr publish` prompts for it); CI does
-not. Publishing a version is irreversible, so run the full definition of done
-first.
+A manual JSR publish needs a JSR token (`npx jsr publish` prompts for it); CI
+does not. Publishing a version is irreversible, so run the full definition of
+done first.
+
+The npm job publishes the tarball the build job packed, rather than the source
+tree, so npm and the GitHub Release ship one byte-identical artefact.  `npm
+publish` runs with `--provenance`, which is what requests the OIDC token; the
+repository and this workflow must be registered as a trusted publisher on
+npmjs.com before the first release does.  Publishing into the `@madduck` scope
+needs `--access public`, or npm would default a scoped package to private.
 
 The build job also attaches the output of `npm pack` to the GitHub Release,
 so a consumer without any registry account can install straight from the tag:

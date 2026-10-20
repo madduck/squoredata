@@ -61,13 +61,18 @@ npm install /path/to/squoredata/typescript
 
 ### Publishing
 
-The TypeScript package is published to [JSR](https://jsr.io) as
-`@madduck/squoredata`, by the tag-triggered workflow in
-`.github/workflows/1-build-and-publish.yml`. JSR authenticates the workflow
-through OIDC, so no registry token is stored as a secret.
+The TypeScript package is published to [npmjs](https://www.npmjs.com) and
+[JSR](https://jsr.io) as `@madduck/squoredata`, by the tag-triggered workflow
+in `.github/workflows/1-build-and-publish.yml`. Both registries authenticate
+the workflow through OIDC, so no registry token is stored as a secret.
 
-First-time setup: claim the `@madduck` scope at <https://jsr.io/new> and link
-it to the GitHub account that owns this repository.
+First-time setup, both of which must exist before the first tagged release:
+
+- Claim the `@madduck` scope on npm, and add a trusted publisher for this
+  repository and the `1-build-and-publish.yml` workflow at
+  <https://www.npmjs.com/package/@madduck/squoredata/access>.
+- Claim the `@madduck` scope at <https://jsr.io/new> and link it to the GitHub
+  account that owns this repository.
 
 To release by hand, with the version taken from the Git tag:
 
@@ -75,18 +80,26 @@ To release by hand, with the version taken from the Git tag:
 python scripts/generate_ts.py
 git diff --exit-code typescript/   # must be clean before publishing
 python scripts/stamp_version.py v0.1.1
+npm publish typescript --access public
 cd typescript && npx jsr publish --allow-dirty
 ```
 
 The stamp step is what the release workflow does automatically; do not commit
 its output, because the committed manifests keep the placeholder version.
 
-A local publish needs a JSR token; CI does not. Publishing a version that
+A local JSR publish needs a JSR token; CI does not. Publishing a version that
 already exists fails, so always release from a tag.
 
 ### Installing
 
-JSR packages install into a Node project without an npmjs account. In a Node
+npm is the usual route. The tarball attached to each GitHub Release is the
+same file that was published to npm, so both resolve to one version:
+
+```sh
+npm install @madduck/squoredata
+```
+
+A JSR-aware runtime resolves the same package through JSR instead. In a Node
 project, use the JSR CLI:
 
 ```sh
@@ -102,8 +115,8 @@ That route needs no registry and no account at all:
 npm install https://github.com/madduck/squoredata/releases/download/v0.1.0/madduck-squoredata-0.1.0.tgz
 ```
 
-The tarball has no version range and does not update, so prefer JSR unless you
-need a fully offline or account-free install.
+The tarball has no version range and does not update, so prefer a registry
+unless you need a fully offline or account-free install.
 
 ## Golden tests
 

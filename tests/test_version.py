@@ -33,6 +33,7 @@ def test_release_tag_accepts_multi_digit_components() -> None:
         "v1.2.3.4",  # too many components
         "v0.1.1-4-gabc1234",  # a commit after the tag, not a release
         "v0.1.1-dirty",  # a dirty tag
+        "v0.1.1-",  # a trailing hyphen with no identifiers
         "abc1234",  # a bare commit id
         "",  # nothing at all
     ],
@@ -40,6 +41,24 @@ def test_release_tag_accepts_multi_digit_components() -> None:
 def test_a_non_release_tag_raises(tag: str) -> None:
     with pytest.raises(ValueError, match="cannot derive a version"):
         version_from_tag(tag)
+
+
+# --- Tag with a prerelease suffix ---
+
+
+@pytest.mark.parametrize(
+    ("tag", "version"),
+    [
+        ("v0.3.0-1", "0.3.0-1"),
+        ("v0.3.0-rc.1", "0.3.0-rc.1"),
+        ("v1.2.3-alpha", "1.2.3-alpha"),
+        ("v1.2.3-alpha.1.2", "1.2.3-alpha.1.2"),
+        ("v1.2.3-beta-x.7", "1.2.3-beta-x.7"),
+    ],
+)
+def test_a_prerelease_tag_keeps_its_suffix(tag: str, version: str) -> None:
+    """A semver prerelease passes through unchanged; both registries accept it."""
+    assert version_from_tag(tag) == version
 
 
 # --- Stamping the manifests ---
@@ -78,6 +97,23 @@ def test_stamping_rejects_a_non_release_tag_before_touching_anything(
     for name in MANIFESTS:
         payload = json.loads((manifests_dir / name).read_text(encoding="utf-8"))
         assert payload["version"] == "0.0.0"
+
+
+def test_stamping_writes_a_prerelease_version_into_every_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A prerelease tag is stamped verbatim, so npm and JSR see the suffix."""
+    manifests_dir = tmp_path
+    for name in MANIFESTS:
+        (manifests_dir / name).write_text('{"version": "0.0.0"}\n', encoding="utf-8")
+    monkeypatch.setattr("scripts.stamp_version.TS_DIR", manifests_dir)
+
+    stamp("v0.3.0-1")
+
+    for name in MANIFESTS:
+        payload = json.loads((manifests_dir / name).read_text(encoding="utf-8"))
+        assert payload["version"] == "0.3.0-1"
 
 
 def test_the_generator_writes_the_placeholder() -> None:

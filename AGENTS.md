@@ -159,10 +159,13 @@ validators are both derived from it.
   specifier to `npm:ajv@^8.17.1`, because JSR does not resolve bare specifiers
   on its own.
 - `scripts/stamp_version.py` turns a release tag into a valid semver and writes
-  it into both manifests: `v0.1.1` becomes `0.1.1`. Anything that is not an
-  exact `v<major>.<minor>.<patch>` tag raises, so a malformed tag fails the
-  release rather than publishing a wrong version. The release workflow runs it
-  before `npm pack` and before `jsr publish`.
+  it into both manifests: `v0.1.1` becomes `0.1.1`. A tag may carry a semver
+  prerelease suffix, which is passed through unchanged: `v0.3.0-1` becomes
+  `0.3.0-1`. That form is valid semver and PEP 440 at once, so npm, JSR, and
+  the wheel agree on the ordering. Anything that is not a
+  `v<major>.<minor>.<patch>` tag with an optional prerelease suffix raises, so a
+  malformed tag fails the release rather than publishing a wrong version. The
+  release workflow runs it before `npm pack` and before `jsr publish`.
 - Stamping leaves the tree dirty, and `jsr publish` refuses a dirty tree. The
   publish step therefore passes `--allow-dirty`. Committing the stamp in the
   runner instead would attest provenance for a commit that exists nowhere, so

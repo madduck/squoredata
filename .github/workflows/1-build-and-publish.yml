@@ -174,6 +174,13 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
+      # Trusted publishing requires npm CLI 11.5.1 or later, and staged
+      # publishing requires 11.15.0 or later.  The npm bundled with the Node
+      # release happens to satisfy that today, but it is not guaranteed, so
+      # pin it.  A mismatch fails as a registry 404, which is hard to read.
+      - name: Pin npm
+        run: npm install --global npm@11.15.0
+
       # Publishing the tarball that `build` packed, rather than restamping
       # and repacking the tree, means npm ships exactly the artefact attached
       # to the GitHub Release.  `npm pack` already resolved the files
@@ -251,5 +258,20 @@ jobs:
         # here the tag gates the job and the stamp step is the only change.
         # Committing in the runner instead would attest provenance for a commit
         # that exists nowhere, so keep the dirty stamp and the real tag.
-        run: npx --yes jsr publish --allow-dirty
+        #
+        # The publish is retried, because jsr.io is fronted by Cloudflare and
+        # the status check has been seen to fail with `connection reset`
+        # before any upload starts.  Retrying is safe: a publish that did
+        # complete makes the next attempt fail on the existing version rather
+        # than publishing twice.
+        run: |
+          for attempt in 1 2 3; do
+            if npx --yes jsr publish --allow-dirty; then
+              exit 0
+            fi
+            echo "jsr publish attempt $attempt failed; retrying in $((attempt * 15))s"
+            sleep $((attempt * 15))
+          done
+          echo "jsr publish failed after 3 attempts" >&2
+          exit 1
         working-directory: typescript

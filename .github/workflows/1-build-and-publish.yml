@@ -156,6 +156,12 @@ jobs:
     # configured, OIDC replaces a long-lived NPM_TOKEN, so no registry secret
     # is stored.  `--provenance` is what requests the OIDC token; without it
     # npm would fall back to looking for a token and fail.
+    #
+    # A prerelease tag such as `v0.3.0-2` is published under the `next`
+    # dist-tag, so `npm install @madduck/squoredata` keeps resolving to the
+    # last stable release.  npm refuses to publish a prerelease to `latest`
+    # implicitly, and putting it there implicitly is not what a prerelease
+    # means.  Opt in with `@next`.
     environment: npmjs
     permissions:
       contents: read
@@ -173,6 +179,11 @@ jobs:
       # to the GitHub Release.  `npm pack` already resolved the files
       # allowlist, so npm gets the same contents.  The version lives inside
       # the tarball, so no stamping step is needed here.
+      #
+      # The `./` prefix is load-bearing.  Without it npm sees a slash and
+      # classifies `dist/<name>.tgz` as a `<host>/<path>` git spec, then tries
+      # `git ls-remote ssh://git@github.com/dist/<name>.tgz.git` and fails.  A
+      # leading `./` makes npm read the argument as a local file path.
       - name: Download the TypeScript tarball
         uses: actions/download-artifact@v7
         with:
@@ -180,7 +191,12 @@ jobs:
           path: dist/
 
       - name: Publish to npmjs
-        run: npm publish dist/*.tgz --provenance --access public
+        run: |
+          tag=
+          case "$GITHUB_REF_NAME" in
+            *-*) tag="--tag next" ;;
+          esac
+          npm publish ./dist/*.tgz --provenance --access public $tag
 
   publish-to-jsr:
     name: "Upload to JSR"

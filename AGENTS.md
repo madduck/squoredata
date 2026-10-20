@@ -111,6 +111,18 @@ repository and this workflow must be registered as a trusted publisher on
 npmjs.com before the first release does.  Publishing into the `@madduck` scope
 needs `--access public`, or npm would default a scoped package to private.
 
+Two npm quirks shape that step, and both cost a broken release to find:
+
+- The tarball argument needs a leading `./`.  npm reads any slash-containing
+  argument without one as a `<host>/<path>` git spec, so `dist/x.tgz` becomes
+  `git ls-remote ssh://git@github.com/dist/x.tgz.git` and the job dies on
+  `Permission denied (publickey)`.  Only `./dist/x.tgz` is read as a file.
+- A semver prerelease tag needs an explicit `--tag`.  npm refuses to publish a
+  prerelease to `latest` implicitly, so `v0.3.0-2` fails without one.  The
+  workflow sends prerelease tags to `next`, which keeps the default
+  `npm install @madduck/squoredata` on the last stable release; opt in with
+  `@next`.  Stable tags carry no `--tag` and go to `latest`.
+
 The build job also attaches the output of `npm pack` to the GitHub Release,
 so a consumer without any registry account can install straight from the tag:
 

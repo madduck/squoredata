@@ -7,7 +7,10 @@
     "generate": "python scripts/generate_ts.py && git diff --exit-code typescript",
     "test:types": "tsc --noEmit -p tsconfig.json",
     "test:runtime": "node --test typescript/tests/golden.test.js",
-    "test": "npm run test:types && npm run test:runtime"
+    "test": "npm run test:types && npm run test:runtime",
+    "stamp": "python scripts/stamp_version.py $(git describe --abbrev=0)",
+    "build": "npm run generate && npm run stamp && mkdir --parent build && sh -c 'cd typescript && npm pack --pack-destination ../build'",
+    "clean": "git restore typescript/jsr.json typescript/package.json && rm -r build"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

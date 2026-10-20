@@ -156,6 +156,7 @@ jobs:
     # configured, OIDC replaces a long-lived NPM_TOKEN, so no registry secret
     # is stored.  `--provenance` is what requests the OIDC token; without it
     # npm would fall back to looking for a token and fail.
+    environment: npmjs
     permissions:
       contents: read
       id-token: write
@@ -191,6 +192,7 @@ jobs:
     # a stored token; no JSR secret is needed.  Publishing a version that
     # already exists fails, so this job is tag-gated and never runs on a
     # branch push.
+    environment: jsr
     permissions:
       contents: read
       id-token: write

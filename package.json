@@ -4,7 +4,7 @@
   "description": "Build tooling for the squoredata TypeScript bindings",
   "type": "module",
   "scripts": {
-    "generate": "python scripts/generate_ts.py",
+    "generate": "python scripts/generate_ts.py && git diff --exit-code typescript",
     "test:types": "tsc --noEmit -p tsconfig.json",
     "test:runtime": "node --test typescript/tests/golden.test.js",
     "test": "npm run test:types && npm run test:runtime"
